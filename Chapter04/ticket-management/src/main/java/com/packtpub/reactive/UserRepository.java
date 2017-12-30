@@ -10,4 +10,6 @@ public interface UserRepository {
 	Mono<User> getUser(Integer id);
 	
 	Mono<Void> saveUser(Mono<User> userMono);
+	
+	Mono<Void> updateUser(Mono<User> userMono);
 }

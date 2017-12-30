@@ -43,4 +43,9 @@ public class UserHandler {
 		Mono<User> user = request.bodyToMono(User.class);
 		return ServerResponse.ok().build(this.userRepository.saveUser(user));
 	}
+	
+	public Mono<ServerResponse> updateUser(ServerRequest request) {
+		Mono<User> user = request.bodyToMono(User.class);
+		return ServerResponse.ok().build(this.userRepository.updateUser(user));
+	}
 }
