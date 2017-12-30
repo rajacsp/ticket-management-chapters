@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class UserRepositorySample implements UserRepository {
 
@@ -12,14 +13,19 @@ public class UserRepositorySample implements UserRepository {
 
 	// fill dummy values for testing
 	public UserRepositorySample() {
-		this.users.put(1, new User(100, "David"));
-		this.users.put(2, new User(101, "John"));
-		this.users.put(3, new User(102, "Kevin"));
+		this.users.put(100, new User(100, "David"));
+		this.users.put(101, new User(101, "John"));
+		this.users.put(102, new User(102, "Kevin"));
 	}
 
 	// this method will return all users
 	@Override
 	public Flux<User> getAllUsers() {
 		return Flux.fromIterable(this.users.values());
+	}
+	
+	@Override
+	public Mono<User> getUser(Integer id){
+		return Mono.justOrEmpty(this.users.get(id));		
 	}
 }
