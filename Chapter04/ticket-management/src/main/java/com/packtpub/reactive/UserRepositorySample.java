@@ -28,4 +28,12 @@ public class UserRepositorySample implements UserRepository {
 	public Mono<User> getUser(Integer id){
 		return Mono.justOrEmpty(this.users.get(id));		
 	}
+	
+	@Override
+	public Mono<Void> saveUser(Mono<User> userMono) {
+		return userMono.doOnNext(user -> {			
+			users.put(user.getUserid(), user);
+			System.out.format("Saved %s with id %d%n", user, user.getUserid());
+		}).thenEmpty(Mono.empty());
+	}
 }

@@ -8,4 +8,6 @@ public interface UserRepository {
 	Flux<User> getAllUsers();
 	
 	Mono<User> getUser(Integer id);
+	
+	Mono<Void> saveUser(Mono<User> userMono);
 }

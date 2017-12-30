@@ -37,4 +37,10 @@ public class UserHandler {
 				.flatMap(user -> ServerResponse.ok().contentType(APPLICATION_JSON).body(fromObject(user)))
 				.switchIfEmpty(notFound);		
 	}	
+	
+	public Mono<ServerResponse> createUser(ServerRequest request) {
+		System.out.println("test1");
+		Mono<User> user = request.bodyToMono(User.class);
+		return ServerResponse.ok().build(this.userRepository.saveUser(user));
+	}
 }
