@@ -12,4 +12,6 @@ public interface UserRepository {
 	Mono<Void> saveUser(Mono<User> userMono);
 	
 	Mono<Void> updateUser(Mono<User> userMono);
+	
+	Mono<Void> deleteUser(Integer id);
 }

@@ -44,4 +44,13 @@ public class UserRepositorySample implements UserRepository {
 			System.out.format("Saved %s with id %d%n", user, 1);
 		}).thenEmpty(Mono.empty());
 	}
+	
+	@Override
+	public Mono<Void> deleteUser(Integer id) {
+		
+		users.remove(id);		
+		System.out.println("user : "+users);
+		
+		return Mono.empty();
+	}
 }

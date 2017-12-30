@@ -48,4 +48,9 @@ public class UserHandler {
 		Mono<User> user = request.bodyToMono(User.class);
 		return ServerResponse.ok().build(this.userRepository.updateUser(user));
 	}
+	
+	public Mono<ServerResponse> deleteUser(ServerRequest request) {		
+		int userId = Integer.valueOf(request.pathVariable("id"));
+		return ServerResponse.ok().build(this.userRepository.deleteUser(userId));
+	}
 }
