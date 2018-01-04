@@ -16,13 +16,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User getUser(Integer userid) {
-		for (User user : users) {
-			if (user.getUserid() == userid) {
-				return user;
-			}
-		}
-		return null;
+	public User getUser(Integer userid) {		
+		
+		return users.stream()
+		.filter(x -> x.getUserid()  == userid)
+		.findAny()
+		.orElse(new User(0, "Not Available"));
+		
 	}
 
 	@Override

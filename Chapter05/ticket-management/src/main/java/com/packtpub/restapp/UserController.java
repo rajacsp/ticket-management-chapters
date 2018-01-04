@@ -31,7 +31,7 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping("/{id}")
 	public User getUser(@PathVariable("id") Integer id) {
-		return userSevice.getUser(100);
+		return userSevice.getUser(id);
 	}
 
 	@ResponseBody
