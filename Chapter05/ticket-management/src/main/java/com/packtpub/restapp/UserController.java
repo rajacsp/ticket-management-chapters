@@ -55,10 +55,12 @@ public class UserController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "", method = RequestMethod.DELETE)
-	public Map<String, Object> deleteUser() {
-		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("result", "Update User Implementation");
-		return map;
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public Map<String, Object> deleteUser(
+			@PathVariable("id") Integer userid) {
+		Map<String, Object> map = new LinkedHashMap<>();   
+	    userSevice.deleteUser(userid);    
+	    map.put("result", "deleted");
+	    return map;
 	}
 }

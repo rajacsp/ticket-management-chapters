@@ -2,7 +2,9 @@ package com.packtpub.service;
 
 import java.util.LinkedList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
+
 import com.packtpub.model.User;
 
 @Service
@@ -36,6 +38,13 @@ public class UserServiceImpl implements UserService {
 				.findAny()
 				.orElseThrow(() -> new RuntimeException("Item not found"))
 				.setUsername(username);		
+	}
+	
+	@Override
+	public void deleteUser(Integer userid) {   
+		
+		users.removeIf((User u) -> u.getUserid() == userid);
+		
 	}
 
 	// Dummy users
