@@ -26,4 +26,9 @@ public class User {
 		this.userid = userid;
 		this.username = username;
 	}
+	
+	@Override
+	public String toString() {
+		return "User [userid=" + userid + ", username=" + username + "]";
+	}
 }

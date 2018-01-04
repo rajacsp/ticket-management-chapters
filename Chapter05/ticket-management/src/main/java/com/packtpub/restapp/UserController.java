@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,17 +36,21 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Map<String, Object> createUser() {
+	public Map<String, Object> createUser(@RequestParam(value = "userid") Integer userid,
+			@RequestParam(value = "username") String username) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("result", "Create User Implementation");
+		userSevice.createUser(userid, username);
+		map.put("result", "added");
 		return map;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Map<String, Object> updateUser() {
+	public Map<String, Object> updateUser(@RequestParam(value = "userid") Integer userid,
+			@RequestParam(value = "username") String username) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("result", "Update User Implementation");
+		userSevice.updateUser(userid, username);
+		map.put("result", "updated");
 		return map;
 	}
 
