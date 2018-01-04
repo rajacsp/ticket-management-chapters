@@ -7,10 +7,20 @@ import com.packtpub.model.User;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Override
 	public List<User> getAllUsers() {
 		return this.users;
+	}
+
+	@Override
+	public User getUser(Integer userid) {
+		for (User user : users) {
+			if (user.getUserid() == userid) {
+				return user;
+			}
+		}
+		return null;
 	}
 
 	// Dummy users

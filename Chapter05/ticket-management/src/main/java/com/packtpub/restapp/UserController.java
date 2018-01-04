@@ -17,22 +17,20 @@ import com.packtpub.service.UserService;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-	
+
 	@Autowired
 	UserService userSevice;
-	
+
 	@ResponseBody
 	@RequestMapping("")
-	public List<User> getAllUsers(){
-	    return userSevice.getAllUsers();
+	public List<User> getAllUsers() {
+		return userSevice.getAllUsers();
 	}
 
 	@ResponseBody
 	@RequestMapping("/{id}")
-	public Map<String, Object> getUser(@PathVariable("id") Integer id) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		map.put("result", "Get User Implementation");
-		return map;
+	public User getUser(@PathVariable("id") Integer id) {
+		return userSevice.getUser(100);
 	}
 
 	@ResponseBody
