@@ -40,8 +40,8 @@ public class UserRepositorySample implements UserRepository {
 	@Override
 	public Mono<Void> updateUser(Mono<User> userMono) {
 		return userMono.doOnNext(user -> {			
-			users.put(1, user);
-			System.out.format("Saved %s with id %d%n", user, 1);
+			users.put(user.getUserid(), user);
+			System.out.format("Saved %s with id %d%n", user, user.getUserid());
 		}).thenEmpty(Mono.empty());
 	}
 	
