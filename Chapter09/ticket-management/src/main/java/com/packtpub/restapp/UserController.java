@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.packtpub.aop.TokenRequired;
 import com.packtpub.model.User;
 import com.packtpub.service.UserService;
 
@@ -55,6 +56,7 @@ public class UserController {
 	}
 
 	@ResponseBody
+	@TokenRequired
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Map<String, Object> deleteUser(
 			@PathVariable("id") Integer userid) {

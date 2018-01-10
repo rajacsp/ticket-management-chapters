@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.packtpub.aop.TokenRequired;
 import com.packtpub.service.SecurityService;
 
 @RestController
@@ -23,6 +24,25 @@ public class HomeController {
 	public Map<String, Object> test() {
 		Map<String, Object> map = new LinkedHashMap<>();
 		map.put("result", "Aloha");
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/test/aop/with/annotation")
+	@TokenRequired
+	public Map<String, Object> testAOPAnnotation(){
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("result", "Aloha");
+		
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/test/aop/with/execution")	
+	public Map<String, Object> testAOPExecution(){
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("result", "Aloha");
+		
 		return map;
 	}
 	
