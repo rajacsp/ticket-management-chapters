@@ -21,13 +21,13 @@ public class UserServiceImpl implements UserService {
 		return users.stream()
 		.filter(x -> x.getUserid()  == userid)
 		.findAny()
-		.orElse(new User(0, "Not Available"));
+		.orElse(new User(0, "Not Available", 0));
 		
 	}
 
 	@Override
 	public void createUser(Integer userid, String username) {
-		User user = new User(userid, username);
+		User user = new User(userid, username, 2);
 		this.users.add(user);
 	}
 
@@ -52,8 +52,9 @@ public class UserServiceImpl implements UserService {
 
 	public UserServiceImpl() {
 		users = new LinkedList<>();
-		users.add(new User(100, "David"));
-		users.add(new User(101, "Peter"));
-		users.add(new User(102, "John"));
+		users.add(new User(100, "David", 3)); // 3 - admin
+		users.add(new User(101, "Peter", 1)); // 1 - general user
+		users.add(new User(102, "John", 1)); //  1 - general user
+		users.add(new User(103, "Kevin", 2)); // 2 - CSR  
 	}
 }
