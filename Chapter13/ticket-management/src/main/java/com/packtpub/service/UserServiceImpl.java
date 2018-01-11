@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void createUser(Integer userid, String username) {
+	public void createUser(Integer userid, String username, Integer usertype) {
 		User user = new User(userid, username, 2);
 		this.users.add(user);
 	}

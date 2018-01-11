@@ -37,10 +37,48 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Map<String, Object> createUser(@RequestParam(value = "userid") Integer userid,
-			@RequestParam(value = "username") String username) {
+	public Map<String, Object> createUser(
+			@RequestParam(value = "userid") Integer userid,
+			@RequestParam(value = "username") String username,
+			@RequestParam(value = "username") Integer usertype) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		userSevice.createUser(userid, username);
+		userSevice.createUser(userid, username, usertype);
+		map.put("result", "added");
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public Map<String, Object> createCustomer(
+			@RequestParam(value = "userid") Integer userid,
+			@RequestParam(value = "username") String username
+			) {
+		Map<String, Object> map = new LinkedHashMap<>();
+		userSevice.createUser(userid, username, 1);
+		map.put("result", "added");
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public Map<String, Object> createCSR(
+			@RequestParam(value = "userid") Integer userid,
+			@RequestParam(value = "username") String username
+			) {
+		Map<String, Object> map = new LinkedHashMap<>();
+		userSevice.createUser(userid, username, 2);
+		map.put("result", "added");
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public Map<String, Object> createAdmin(
+			@RequestParam(value = "userid") Integer userid,
+			@RequestParam(value = "username") String username
+			) {
+		Map<String, Object> map = new LinkedHashMap<>();
+		userSevice.createUser(userid, username, 3);
 		map.put("result", "added");
 		return map;
 	}
