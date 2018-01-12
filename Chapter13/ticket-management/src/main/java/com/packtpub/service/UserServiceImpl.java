@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 	public User getUser(Integer userid) {		
 		
 		return users.stream()
-		.filter(x -> x.getUserid()  == userid)
+		.filter(x -> x.getUserid().intValue()  == userid.intValue())
 		.findAny()
 		.orElse(null);		
 	}	
@@ -70,8 +70,9 @@ public class UserServiceImpl implements UserService {
 		
 		String[] subjectParts = subject.split("=");
 		
-		Integer usertype = new Integer(subjectParts[1]);
+		
 		Integer userid = new Integer(subjectParts[0]);
+		Integer usertype = new Integer(subjectParts[1]);		
 		
 		System.out.println("{getUserByToken} usertype["+usertype+"], userid["+userid+"]");
 		

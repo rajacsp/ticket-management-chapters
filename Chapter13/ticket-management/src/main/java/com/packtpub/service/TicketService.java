@@ -3,6 +3,7 @@ package com.packtpub.service;
 import java.util.List;
 
 import com.packtpub.model.Ticket;
+import com.packtpub.model.User;
 
 public interface TicketService {
 
@@ -21,4 +22,6 @@ public interface TicketService {
 	void updateTicket(Integer ticketid, String content, Integer severity, Integer status);
 	
 	void deleteTickets(Integer userid, String ticketids) throws Exception;
+	
+	void deleteTickets(User user, String ticketids) throws Exception;
 }

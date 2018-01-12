@@ -114,6 +114,28 @@ public class TicketServiceImpl implements TicketService {
 	}	
 	
 	@Override
+	public void deleteTickets(User user, String ticketids) throws Exception {
+		
+		if(user.getUsertype() == 1){ //check for general user
+			throw new Exception("User is not authorized to delete");
+		}
+		
+		List<String> ticketObjList = Arrays.asList(ticketids.split(","));
+		
+		if(user.getUsertype() == 2 && ticketObjList.size() > 3){
+			throw new Exception("CSR can't delete more than 3 tickets");
+		}
+		
+		List<Integer> intList =
+			ticketObjList.stream()
+			.map(Integer::valueOf)
+			.collect(Collectors.toList())
+        ;					
+		
+		tickets.removeIf(x -> intList.contains(x.getTicketid()));
+	}
+	
+	@Override
 	public void deleteMyTicket(Integer userid, Integer ticketid) throws Exception {		
 		tickets.removeIf(x -> x.getTicketid().intValue() == ticketid.intValue() && x.getCreatorid().intValue() == userid.intValue());
 	}

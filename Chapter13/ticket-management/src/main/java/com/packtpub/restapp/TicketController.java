@@ -29,7 +29,7 @@ public class TicketController {
 	UserService userSevice;
 
 	@ResponseBody
-	@RequestMapping("/by/admin")
+	@RequestMapping({"/by/admin", "/by/csr"})
 	public <T> T getAllTickets(
 		HttpServletRequest request,
 		HttpServletResponse response) {
@@ -45,7 +45,7 @@ public class TicketController {
 		}
 		
 		return (T) ticketSevice.getAllTickets();
-	}
+	}	
 	
 	@ResponseBody
 	@RequestMapping("/{ticketid}")
@@ -256,13 +256,25 @@ public class TicketController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/by/csr/{userid}", method =  RequestMethod.DELETE)
+	@RequestMapping(value = "/by/csr", method =  RequestMethod.DELETE)
 	public <T> T deleteTicketsByCSR (
-			@PathVariable("userid") final Integer userid,
-			@RequestParam("ticketids") final String ticketids
+			@RequestParam("ticketids") final String ticketids,
+			
+			HttpServletRequest request,
+			HttpServletResponse response
 			) throws Exception {
 		
-		ticketSevice.deleteTickets(userid, ticketids);
+		User user = userSevice.getUserByToken(request.getHeader("token"));
+		
+		if(user == null){
+			Map<String, Object> map = new LinkedHashMap<>();
+			
+			map.put("result_code", 501);
+			map.put("result", "User Not Available");			
+			return (T) map;
+		}
+		
+		ticketSevice.deleteTickets(user.getUserid(), ticketids);
 		
 		Map<String, String> result = new LinkedHashMap<>();
 		result.put("result", "deleted");
@@ -272,12 +284,23 @@ public class TicketController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/by/admin", method =  RequestMethod.DELETE)
-	public <T> T deleteTicketsByAdmin (
-			@PathVariable("userid") final Integer userid,
-			@RequestParam("ticketids") final String ticketids
+	public <T> T deleteTicketsByAdmin (			
+			@RequestParam("ticketids") final String ticketids,
+			HttpServletRequest request,
+			HttpServletResponse response
 			) throws Exception {
 		
-		ticketSevice.deleteTickets(userid, ticketids);
+		User user = userSevice.getUserByToken(request.getHeader("token"));
+		
+		if(user == null){
+			Map<String, Object> map = new LinkedHashMap<>();
+			
+			map.put("result_code", 501);
+			map.put("result", "User Not Available");			
+			return (T) map;
+		}
+		
+		ticketSevice.deleteTickets(user.getUserid(), ticketids);
 		
 		Map<String, String> result = new LinkedHashMap<>();
 		result.put("result", "deleted");
