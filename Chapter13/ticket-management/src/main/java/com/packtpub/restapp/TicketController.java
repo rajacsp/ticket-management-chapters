@@ -1,7 +1,6 @@
 package com.packtpub.restapp;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.packtpub.model.Ticket;
 import com.packtpub.model.User;
 import com.packtpub.service.TicketService;
 import com.packtpub.service.UserService;
@@ -31,12 +29,44 @@ public class TicketController {
 	UserService userSevice;
 
 	@ResponseBody
-	@RequestMapping("")
-	public List<Ticket> getAllTicket() {
-		return ticketSevice.getAllTickets();
+	@RequestMapping("/by/admin")
+	public <T> T getAllTickets(
+		HttpServletRequest request,
+		HttpServletResponse response) {
+		
+		User user = userSevice.getUserByToken(request.getHeader("token"));
+		
+		if(user == null){
+			Map<String, Object> map = new LinkedHashMap<>();
+			
+			map.put("result_code", 501);
+			map.put("result", "User Not Available");			
+			return (T) map;
+		}
+		
+		return (T) ticketSevice.getAllTickets();
 	}
 	
+	@ResponseBody
+	@RequestMapping("/{ticketid}")
+	public <T> T getTicket(
+		@PathVariable("ticketid") final Integer ticketid,
+			
+		HttpServletRequest request,
+		HttpServletResponse response) {
 		
+		User user = userSevice.getUserByToken(request.getHeader("token"));
+		
+		if(user == null){
+			Map<String, Object> map = new LinkedHashMap<>();
+			
+			map.put("result_code", 501);
+			map.put("result", "User Not Available");			
+			return (T) map;
+		}
+		
+		return (T) ticketSevice.getTicket(ticketid);
+	}
 	
 	
 	/*
@@ -49,8 +79,6 @@ public class TicketController {
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public <T> T addTicket(			
 			@RequestParam(value="content") String content,
-			@RequestParam(value="severity") Integer severity,
-			@RequestParam(value="status") Integer status,
 			
 			HttpServletRequest request,
 			HttpServletResponse response
@@ -70,7 +98,7 @@ public class TicketController {
 		
 		System.out.println("{addTicket} user["+user.getUserid()+"] adding ticket");
 		
-		ticketSevice.addTicket(user.getUserid(), content, severity, status);
+		ticketSevice.addTicket(user.getUserid(), content, 2, 1);
 		
 		Map<String, Object> result = new LinkedHashMap<>();
 		result.put("result_code", 0);
@@ -97,8 +125,6 @@ public class TicketController {
 		}
 		
 		Map<String, Object> map = new LinkedHashMap<>();
-		
-		System.out.println("{getMyTickets} user : "+user);
 		
 		map.put("result_code", 0);
 		map.put("result", "success");
@@ -245,7 +271,7 @@ public class TicketController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/by/admin/{userid}", method =  RequestMethod.DELETE)
+	@RequestMapping(value = "/by/admin", method =  RequestMethod.DELETE)
 	public <T> T deleteTicketsByAdmin (
 			@PathVariable("userid") final Integer userid,
 			@RequestParam("ticketids") final String ticketids

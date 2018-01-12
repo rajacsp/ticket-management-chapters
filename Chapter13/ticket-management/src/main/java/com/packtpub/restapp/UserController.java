@@ -153,7 +153,7 @@ public class UserController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/register/customer", method = RequestMethod.POST)
-	public Map<String, Object> registerCustome(			
+	public Map<String, Object> registerCustomer(			
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password
 		) {

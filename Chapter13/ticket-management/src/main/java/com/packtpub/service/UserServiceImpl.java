@@ -110,13 +110,11 @@ public class UserServiceImpl implements UserService {
 	public static List<User> users;
 
 	public UserServiceImpl() {
-		users = new LinkedList<>();
+		users = new LinkedList<>();		
 		
-		/*
-		users.add(new User(100, "David", 3)); // 3 - admin
-		users.add(new User(101, "Peter", 1)); // 1 - general user
-		users.add(new User(102, "John", 1)); //  1 - general user
-		users.add(new User(103, "Kevin", 2)); // 2 - CSR
-		*/  
+		users.add(new User("sammy", "pass", 3)); // 3 - admin
+		users.add(new User("chloe", "pass", 2)); // // 2 - CSR
+		
+		users.add(new User("peter", "pass", 1)); //  1 - general user		  
 	}
 }
