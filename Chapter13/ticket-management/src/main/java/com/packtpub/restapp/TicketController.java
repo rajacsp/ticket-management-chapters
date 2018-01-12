@@ -37,15 +37,19 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		return (T) ticketSevice.getAllTickets();
 	}	
+	
+	private <T> T getUserNotAvailableError(){
+		Map<String, Object> map = new LinkedHashMap<>();
+		
+		map.put("result_code", 501);
+		map.put("result", "User Not Available");			
+		return (T) map;
+	}
 	
 	@ResponseBody
 	@RequestMapping("/{ticketid}")
@@ -58,11 +62,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		return (T) ticketSevice.getTicket(ticketid);
@@ -84,16 +84,10 @@ public class TicketController {
 			HttpServletResponse response
 			) {
 		
-		String token = request.getHeader("token");		
-		User user = userSevice.getUserByToken(token);
+		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");
-			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		System.out.println("{addTicket} user["+user.getUserid()+"] adding ticket");
@@ -117,11 +111,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(token);
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return map;
+			return getUserNotAvailableError();
 		}
 		
 		Map<String, Object> map = new LinkedHashMap<>();
@@ -146,11 +136,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(token);
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		ticketSevice.deleteMyTicket(user.getUserid(), ticketid);
@@ -178,11 +164,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
@@ -209,11 +191,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
@@ -240,11 +218,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
@@ -267,11 +241,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		ticketSevice.deleteTickets(user.getUserid(), ticketids);
@@ -293,11 +263,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			Map<String, Object> map = new LinkedHashMap<>();
-			
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return (T) map;
+			return getUserNotAvailableError();
 		}
 		
 		ticketSevice.deleteTickets(user.getUserid(), ticketids);
