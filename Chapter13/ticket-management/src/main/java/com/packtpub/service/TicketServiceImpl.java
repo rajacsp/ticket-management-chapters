@@ -23,9 +23,12 @@ public class TicketServiceImpl implements TicketService {
 
 	public TicketServiceImpl() {
 		tickets = new LinkedList<>();
+		
+		/*
 		tickets.add(new Ticket(101, new Date(), "Login is not working", 5, 1));
 		tickets.add(new Ticket(101, new Date(), "Submit button is not working", 5, 1));
 		tickets.add(new Ticket(102, new Date(), "Registration is not working", 5, 1));
+		*/
 	}
 
 	@Override
@@ -34,10 +37,10 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public List<Ticket> getMyTickets(Integer creatorid) {
+	public List<Ticket> getMyTickets(Integer creatorid) {		
 		
 		return tickets.stream()
-				.filter(x -> x.getCreatorid() == creatorid)
+				.filter(x -> x.getCreatorid().intValue() == creatorid.intValue())				
 				.collect(Collectors.toList())
 				;
 	}
@@ -46,7 +49,7 @@ public class TicketServiceImpl implements TicketService {
 	public Ticket getTicket(Integer creatorid, Integer ticketid) {
 		
 		return tickets.stream()
-				.filter(x -> x.getCreatorid()  == creatorid && x.getTicketid() == ticketid)
+				.filter(x -> x.getCreatorid().intValue()  == creatorid.intValue() && x.getTicketid().intValue() == ticketid.intValue())
 				.findAny()
 				.orElse(null);
 	}
@@ -55,7 +58,7 @@ public class TicketServiceImpl implements TicketService {
 	public Ticket getTicket(Integer ticketid) {
 		
 		return tickets.stream()
-				.filter(x -> x.getTicketid() == ticketid)
+				.filter(x -> x.getTicketid().intValue() == ticketid.intValue())
 				.findAny()
 				.orElse(null);
 	}
@@ -65,6 +68,21 @@ public class TicketServiceImpl implements TicketService {
 		Ticket ticket = new Ticket(creatorid, new Date(), content, severity, status);
 		
 		tickets.add(ticket);
+	}
+	
+	
+	@Override
+	public void updateTicket(Integer ticketid, String content, Integer severity, Integer status) {
+		
+		Ticket ticket = getTicket(ticketid);
+		
+		if(ticket == null){
+			throw new RuntimeException("Ticket Not Available");
+		}
+		
+		ticket.setContent(content);
+		ticket.setSeverity(severity);
+		ticket.setStatus(status);	
 	}
 
 	@Override
@@ -93,5 +111,10 @@ public class TicketServiceImpl implements TicketService {
         ;					
 		
 		tickets.removeIf(x -> intList.contains(x.getTicketid()));
+	}	
+	
+	@Override
+	public void deleteMyTicket(Integer userid, Integer ticketid) throws Exception {		
+		tickets.removeIf(x -> x.getTicketid().intValue() == ticketid.intValue() && x.getCreatorid().intValue() == userid.intValue());
 	}
 }

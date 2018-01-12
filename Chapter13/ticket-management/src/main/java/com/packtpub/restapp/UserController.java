@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.packtpub.aop.TokenRequired;
+import com.packtpub.aop.UserTokenRequired;
 import com.packtpub.model.User;
+import com.packtpub.service.SecurityService;
 import com.packtpub.service.UserService;
 
 @RestController
@@ -22,9 +24,13 @@ public class UserController {
 
 	@Autowired
 	UserService userSevice;
+	
+	@Autowired
+	SecurityService securityService;
 
 	@ResponseBody
 	@RequestMapping("")
+	//@UserTokenRequired
 	public List<User> getAllUsers() {
 		return userSevice.getAllUsers();
 	}
@@ -35,6 +41,7 @@ public class UserController {
 		return userSevice.getUser(id);
 	}
 
+	/*
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public Map<String, Object> createUser(
@@ -46,43 +53,128 @@ public class UserController {
 		map.put("result", "added");
 		return map;
 	}
+	*/
 	
 	@ResponseBody
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Map<String, Object> createCustomer(
-			@RequestParam(value = "userid") Integer userid,
-			@RequestParam(value = "username") String username
-			) {
+	@RequestMapping(value = "/register/admin", method = RequestMethod.POST)
+	public Map<String, Object> registerAdmin(			
+			@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password
+		) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		userSevice.createUser(userid, username, 1);
+		userSevice.createUser(username, password, 3);
 		map.put("result", "added");
 		return map;
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Map<String, Object> createCSR(
-			@RequestParam(value = "userid") Integer userid,
-			@RequestParam(value = "username") String username
-			) {
+	@RequestMapping(value = "/login/admin", method = RequestMethod.POST)
+	public Map<String, Object> loginAdmin(			
+			@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password
+		) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		userSevice.createUser(userid, username, 2);
+		
+		User user = userSevice.getUser(username, password, 3);
+		
+		if(user == null){
+			map.put("result_code", 501);
+			map.put("result", "User Not Available");			
+			return map;
+		}
+		
+		String subject = user.getUserid()+"="+user.getUsertype();
+		String token = securityService.createToken(subject, (15 * 1000 * 60)); // 15 mins expiry time
+		
+		map.put("result_code", 0);
+		map.put("result", "success");
+		map.put("token", token);
+		
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/login/customer", method = RequestMethod.POST)
+	public Map<String, Object> loginCustomer(			
+			@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password
+		) {
+		Map<String, Object> map = new LinkedHashMap<>();
+		
+		User user = userSevice.getUser(username, password, 1);
+		
+		if(user == null){
+			map.put("result_code", 501);
+			map.put("result", "User Not Available");			
+			return map;
+		}
+		
+		String subject = user.getUserid()+"="+user.getUsertype();
+		
+		System.out.println("{loginCSR} subject : "+subject);
+		
+		String token = securityService.createToken(subject, (15 * 1000 * 60)); // 15 mins expiry time
+		
+		map.put("result_code", 0);
+		map.put("result", "success");
+		map.put("token", token);
+		
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/login/csr", method = RequestMethod.POST)
+	public Map<String, Object> loginCSR(			
+			@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password
+		) {
+		Map<String, Object> map = new LinkedHashMap<>();
+		
+		User user = userSevice.getUser(username, password, 2);
+		
+		if(user == null){
+			map.put("result_code", 501);
+			map.put("result", "User Not Available");			
+			return map;
+		}
+		
+		String subject = user.getUserid()+"="+user.getUsertype();
+		
+		System.out.println("{loginCSR} subject : "+subject);
+		
+		String token = securityService.createToken(subject, (15 * 1000 * 60)); // 15 mins expiry time
+		
+		map.put("result_code", 0);
+		map.put("result", "success");
+		map.put("token", token);
+		
+		return map;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/register/customer", method = RequestMethod.POST)
+	public Map<String, Object> registerCustome(			
+			@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password
+		) {
+		Map<String, Object> map = new LinkedHashMap<>();
+		userSevice.createUser(username, password, 1);
 		map.put("result", "added");
 		return map;
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Map<String, Object> createAdmin(
-			@RequestParam(value = "userid") Integer userid,
-			@RequestParam(value = "username") String username
-			) {
+	@RequestMapping(value = "/register/csr", method = RequestMethod.POST)
+	public Map<String, Object> registerCSR(			
+			@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password
+		) {
 		Map<String, Object> map = new LinkedHashMap<>();
-		userSevice.createUser(userid, username, 3);
+		userSevice.createUser(username, password, 2);
 		map.put("result", "added");
 		return map;
 	}
-
+	
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	public Map<String, Object> updateUser(@RequestParam(value = "userid") Integer userid,

@@ -3,12 +3,21 @@ package com.packtpub.service;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.bind.DatatypeConverter;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.packtpub.model.User;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+
 @Service
 public class UserServiceImpl implements UserService {
+	
+	@Autowired
+	SecurityService securityService;
 
 	@Override
 	public List<User> getAllUsers() {
@@ -21,13 +30,63 @@ public class UserServiceImpl implements UserService {
 		return users.stream()
 		.filter(x -> x.getUserid()  == userid)
 		.findAny()
-		.orElse(new User(0, "Not Available", 0));
+		.orElse(null);		
+	}	
+	
+	@Override
+	public User getUser(String username, String password, Integer usertype) {
 		
+		//System.out.println("username["+username+"], password["+password+"], usertype["+usertype+"]");
+		
+		//System.out.println("users : "+users);
+		
+		//System.out.println("users.stream : "+users.stream());
+		
+		return users.stream()
+		.filter(x -> x.getUsername().equalsIgnoreCase(username) && x.getPassword().equalsIgnoreCase(password)  && x.getUsertype() == usertype )
+		.findAny()
+		.orElse(null);
+		
+		//System.out.println("{getUser} user : "+user);
+		
+		//return user;
+	}
+	
+	@Override
+	public User getUserByToken(String token){
+		Claims claims = Jwts.parser()         
+			       .setSigningKey(DatatypeConverter.parseBase64Binary(SecurityServiceImpl.secretKey))
+			       .parseClaimsJws(token).getBody();
+		
+		if(claims == null || claims.getSubject() == null){
+			return null;
+		}
+		
+		String subject = claims.getSubject();
+		
+		if(subject.split("=").length != 2){
+			return null;
+		}
+		
+		String[] subjectParts = subject.split("=");
+		
+		Integer usertype = new Integer(subjectParts[1]);
+		Integer userid = new Integer(subjectParts[0]);
+		
+		System.out.println("{getUserByToken} usertype["+usertype+"], userid["+userid+"]");
+		
+		return new User(userid, usertype);
 	}
 
 	@Override
 	public void createUser(Integer userid, String username, Integer usertype) {
 		User user = new User(userid, username, 2);
+		this.users.add(user);
+	}
+	
+	@Override
+	public void createUser(String username, String password, Integer usertype){
+		User user = new User(username, password, usertype);		
 		this.users.add(user);
 	}
 
@@ -52,9 +111,12 @@ public class UserServiceImpl implements UserService {
 
 	public UserServiceImpl() {
 		users = new LinkedList<>();
+		
+		/*
 		users.add(new User(100, "David", 3)); // 3 - admin
 		users.add(new User(101, "Peter", 1)); // 1 - general user
 		users.add(new User(102, "John", 1)); //  1 - general user
-		users.add(new User(103, "Kevin", 2)); // 2 - CSR  
+		users.add(new User(103, "Kevin", 2)); // 2 - CSR
+		*/  
 	}
 }
