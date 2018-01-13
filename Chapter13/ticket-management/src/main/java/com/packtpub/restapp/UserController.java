@@ -16,6 +16,7 @@ import com.packtpub.aop.TokenRequired;
 import com.packtpub.model.User;
 import com.packtpub.service.SecurityService;
 import com.packtpub.service.UserService;
+import com.packtpub.util.Util;
 
 @RestController
 @RequestMapping("/user")
@@ -29,7 +30,6 @@ public class UserController {
 
 	@ResponseBody
 	@RequestMapping("")
-	//@UserTokenRequired
 	public List<User> getAllUsers() {
 		return userSevice.getAllUsers();
 	}
@@ -37,33 +37,20 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping("/{id}")
 	public User getUser(@PathVariable("id") Integer id) {
-		return userSevice.getUser(id);
+		
+		return Util.getSuccessResult(userSevice.getUser(id));
 	}
 
-	/*
-	@ResponseBody
-	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Map<String, Object> createUser(
-			@RequestParam(value = "userid") Integer userid,
-			@RequestParam(value = "username") String username,
-			@RequestParam(value = "username") Integer usertype) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		userSevice.createUser(userid, username, usertype);
-		map.put("result", "added");
-		return map;
-	}
-	*/
-	
 	@ResponseBody
 	@RequestMapping(value = "/register/admin", method = RequestMethod.POST)
 	public Map<String, Object> registerAdmin(			
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password
 		) {
-		Map<String, Object> map = new LinkedHashMap<>();
+		
 		userSevice.createUser(username, password, 3);
-		map.put("result", "added");
-		return map;
+		
+		return Util.getSuccessResult();
 	}
 	
 	@ResponseBody
@@ -72,24 +59,17 @@ public class UserController {
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password
 		) {
-		Map<String, Object> map = new LinkedHashMap<>();
 		
 		User user = userSevice.getUser(username, password, 3);
 		
-		if(user == null){
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return map;
+		if(user == null){						
+			return Util.getUserNotAvailableError();
 		}
 		
 		String subject = user.getUserid()+"="+user.getUsertype();
 		String token = securityService.createToken(subject, (15 * 1000 * 60)); // 15 mins expiry time
 		
-		map.put("result_code", 0);
-		map.put("result", "success");
-		map.put("token", token);
-		
-		return map;
+		return Util.getSuccessResult(token);		
 	}
 	
 	@ResponseBody
@@ -98,27 +78,17 @@ public class UserController {
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password
 		) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		
+
 		User user = userSevice.getUser(username, password, 1);
 		
 		if(user == null){
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return map;
+			return Util.getUserNotAvailableError();
 		}
 		
 		String subject = user.getUserid()+"="+user.getUsertype();
-		
-		System.out.println("{loginCSR} subject : "+subject);
-		
 		String token = securityService.createToken(subject, (15 * 1000 * 60)); // 15 mins expiry time
 		
-		map.put("result_code", 0);
-		map.put("result", "success");
-		map.put("token", token);
-		
-		return map;
+		return Util.getSuccessResult(token);
 	}
 	
 	@ResponseBody
@@ -127,27 +97,17 @@ public class UserController {
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password
 		) {
-		Map<String, Object> map = new LinkedHashMap<>();
 		
 		User user = userSevice.getUser(username, password, 2);
 		
 		if(user == null){
-			map.put("result_code", 501);
-			map.put("result", "User Not Available");			
-			return map;
+			return Util.getUserNotAvailableError();
 		}
 		
 		String subject = user.getUserid()+"="+user.getUsertype();
-		
-		System.out.println("{loginCSR} subject : "+subject);
-		
 		String token = securityService.createToken(subject, (15 * 1000 * 60)); // 15 mins expiry time
-		
-		map.put("result_code", 0);
-		map.put("result", "success");
-		map.put("token", token);
-		
-		return map;
+
+		return Util.getSuccessResult(token);
 	}
 	
 	@ResponseBody
@@ -156,13 +116,9 @@ public class UserController {
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password
 		) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		userSevice.createUser(username, password, 1);
 		
-		map.put("result_code", 0);
-		map.put("result", "success");
-		
-		return map;
+		userSevice.createUser(username, password, 1);		
+		return Util.getSuccessResult();
 	}
 	
 	@ResponseBody
@@ -170,21 +126,19 @@ public class UserController {
 	public Map<String, Object> registerCSR(			
 			@RequestParam(value = "username") String username,
 			@RequestParam(value = "password") String password
-		) {
-		Map<String, Object> map = new LinkedHashMap<>();
+		) {		
+		
 		userSevice.createUser(username, password, 2);
-		map.put("result", "added");
-		return map;
+		return Util.getSuccessResult();
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.PUT)
 	public Map<String, Object> updateUser(@RequestParam(value = "userid") Integer userid,
 			@RequestParam(value = "username") String username) {
-		Map<String, Object> map = new LinkedHashMap<>();
-		userSevice.updateUser(userid, username);
-		map.put("result", "updated");
-		return map;
+		
+		userSevice.updateUser(userid, username);		
+		return Util.getSuccessResult();
 	}
 
 	@ResponseBody
@@ -192,9 +146,8 @@ public class UserController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public Map<String, Object> deleteUser(
 			@PathVariable("id") Integer userid) {
-		Map<String, Object> map = new LinkedHashMap<>();   
-	    userSevice.deleteUser(userid);    
-	    map.put("result", "deleted");
-	    return map;
+		   
+	    userSevice.deleteUser(userid); 
+	    return Util.getSuccessResult();
 	}
 }
