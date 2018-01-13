@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.packtpub.aop.AdminTokenRequired;
+import com.packtpub.aop.CSRTokenRequired;
+import com.packtpub.aop.TokenRequired;
 import com.packtpub.model.User;
 import com.packtpub.service.TicketService;
 import com.packtpub.service.UserService;
@@ -32,12 +34,18 @@ public class TicketController {
 	@ResponseBody
 	@AdminTokenRequired
 	@RequestMapping("/by/admin")
-	public <T> T getAllTickets(
-		HttpServletRequest request,
-		HttpServletResponse response) {
+	public <T> T getAllTickets(HttpServletRequest request) {
 		
 		return (T) ticketSevice.getAllTickets();
 	}	
+	
+	@ResponseBody
+	@CSRTokenRequired
+	@RequestMapping("/by/csr")
+	public <T> T getAllTicketsByCSR(HttpServletRequest request) {
+		
+		return (T) ticketSevice.getAllTickets();
+	}
 	
 	private <T> T getUserNotAvailableError(){
 		Map<String, Object> map = new LinkedHashMap<>();
@@ -48,18 +56,12 @@ public class TicketController {
 	}	
 	
 	@ResponseBody
+	@TokenRequired
 	@RequestMapping("/{ticketid}")
 	public <T> T getTicket(
-		@PathVariable("ticketid") final Integer ticketid,
-			
-		HttpServletRequest request,
-		HttpServletResponse response) {
-		
-		User user = userSevice.getUserByToken(request.getHeader("token"));
-		
-		if(user == null){
-			return getUserNotAvailableError();
-		}
+		@PathVariable("ticketid") final Integer ticketid,		
+		HttpServletRequest request
+		) {
 		
 		return (T) ticketSevice.getTicket(ticketid);
 	}
@@ -74,10 +76,8 @@ public class TicketController {
 	@ResponseBody
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public <T> T addTicket(			
-			@RequestParam(value="content") String content,
-			
-			HttpServletRequest request,
-			HttpServletResponse response
+			@RequestParam(value="content") String content,			
+			HttpServletRequest request
 			) {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));
@@ -100,8 +100,8 @@ public class TicketController {
 	@ResponseBody
 	@RequestMapping("/my/tickets")
 	public Map<String, Object> getMyTickets(
-			HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletRequest request
+			) {
 		
 		String token = request.getHeader("token");		
 		User user = userSevice.getUserByToken(token);
@@ -124,8 +124,7 @@ public class TicketController {
 	public <T> T deleteTicketByUser (
 			@RequestParam("ticketid") final Integer ticketid,
 			
-			HttpServletRequest request,
-			HttpServletResponse response
+			HttpServletRequest request			
 			) throws Exception {
 		
 		String token = request.getHeader("token");		
@@ -151,8 +150,7 @@ public class TicketController {
 			
 			@RequestParam(value="content") String content,
 			
-			HttpServletRequest request,
-			HttpServletResponse response
+			HttpServletRequest request			
 			) throws Exception {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));
@@ -170,6 +168,7 @@ public class TicketController {
 	}
 	
 	@ResponseBody
+	@CSRTokenRequired
 	@RequestMapping(value = "/by/csr", method =  RequestMethod.PUT)
 	public <T> T updateTicketByCSR (
 			@RequestParam("ticketid") final Integer ticketid,
@@ -178,15 +177,8 @@ public class TicketController {
 			@RequestParam(value="severity") Integer severity,
 			@RequestParam(value="status") Integer status,
 			
-			HttpServletRequest request,
-			HttpServletResponse response
+			HttpServletRequest request
 			) throws Exception {
-		
-		User user = userSevice.getUserByToken(request.getHeader("token"));
-		
-		if(user == null){
-			return getUserNotAvailableError();
-		}
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
 		
@@ -206,8 +198,7 @@ public class TicketController {
 			@RequestParam(value="severity") Integer severity,
 			@RequestParam(value="status") Integer status,
 			
-			HttpServletRequest request,
-			HttpServletResponse response
+			HttpServletRequest request
 			) throws Exception {
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
@@ -219,20 +210,15 @@ public class TicketController {
 	}
 	
 	@ResponseBody
+	@CSRTokenRequired
 	@RequestMapping(value = "/by/csr", method =  RequestMethod.DELETE)
 	public <T> T deleteTicketsByCSR (
 			@RequestParam("ticketids") final String ticketids,
 			
-			HttpServletRequest request,
-			HttpServletResponse response
+			HttpServletRequest request
 			) throws Exception {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));
-		
-		if(user == null){
-			return getUserNotAvailableError();
-		}
-		
 		ticketSevice.deleteTickets(user, ticketids);
 		
 		Map<String, String> result = new LinkedHashMap<>();
@@ -246,8 +232,7 @@ public class TicketController {
 	@RequestMapping(value = "/by/admin", method =  RequestMethod.DELETE)
 	public <T> T deleteTicketsByAdmin (			
 			@RequestParam("ticketids") final String ticketids,
-			HttpServletRequest request,
-			HttpServletResponse response
+			HttpServletRequest request
 			) throws Exception {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));

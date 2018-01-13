@@ -88,10 +88,6 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public void deleteTickets(User user, String ticketids) throws Exception {
 		
-		if(user.getUsertype() == 1){ //check for general user
-			throw new Exception("User is not authorized to delete");
-		}
-		
 		List<String> ticketObjList = Arrays.asList(ticketids.split(","));
 		
 		if(user.getUsertype() == 2 && ticketObjList.size() > 3){
