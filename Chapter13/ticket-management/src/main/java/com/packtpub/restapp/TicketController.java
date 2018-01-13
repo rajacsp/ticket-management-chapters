@@ -1,10 +1,8 @@
 package com.packtpub.restapp;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +18,7 @@ import com.packtpub.aop.TokenRequired;
 import com.packtpub.model.User;
 import com.packtpub.service.TicketService;
 import com.packtpub.service.UserService;
+import com.packtpub.util.Util;
 
 @RestController
 @RequestMapping("/ticket")
@@ -36,7 +35,7 @@ public class TicketController {
 	@RequestMapping("/by/admin")
 	public <T> T getAllTickets(HttpServletRequest request) {
 		
-		return (T) ticketSevice.getAllTickets();
+		return (T) Util.getSuccessResult(ticketSevice.getAllTickets());
 	}	
 	
 	@ResponseBody
@@ -44,16 +43,8 @@ public class TicketController {
 	@RequestMapping("/by/csr")
 	public <T> T getAllTicketsByCSR(HttpServletRequest request) {
 		
-		return (T) ticketSevice.getAllTickets();
-	}
-	
-	private <T> T getUserNotAvailableError(){
-		Map<String, Object> map = new LinkedHashMap<>();
-		
-		map.put("result_code", 501);
-		map.put("result", "User Not Available");			
-		return (T) map;
-	}	
+		return (T) Util.getSuccessResult(ticketSevice.getAllTickets());
+	}			
 	
 	@ResponseBody
 	@TokenRequired
@@ -63,7 +54,7 @@ public class TicketController {
 		HttpServletRequest request
 		) {
 		
-		return (T) ticketSevice.getTicket(ticketid);
+		return (T) Util.getSuccessResult(ticketSevice.getTicket(ticketid));
 	}
 	
 	
@@ -83,18 +74,12 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			return getUserNotAvailableError();
+			return Util.getUserNotAvailableError();
 		}
 		
-		System.out.println("{addTicket} user["+user.getUserid()+"] adding ticket");
+		ticketSevice.addTicket(user.getUserid(), content, 2, 1);		
 		
-		ticketSevice.addTicket(user.getUserid(), content, 2, 1);
-		
-		Map<String, Object> result = new LinkedHashMap<>();
-		result.put("result_code", 0);
-		result.put("result", "added");
-		
-		return (T) result; 
+		return Util.getSuccessResult(); 
 	}
 	
 	@ResponseBody
@@ -107,16 +92,10 @@ public class TicketController {
 		User user = userSevice.getUserByToken(token);
 		
 		if(user == null){
-			return getUserNotAvailableError();
+			return Util.getUserNotAvailableError();
 		}
 		
-		Map<String, Object> map = new LinkedHashMap<>();
-		
-		map.put("result_code", 0);
-		map.put("result", "success");
-		map.put("tickest", ticketSevice.getMyTickets(user.getUserid()));		
-		
-		return map;
+		return Util.getSuccessResult(ticketSevice.getMyTickets(user.getUserid()));
 	}
 	
 	@ResponseBody
@@ -131,15 +110,12 @@ public class TicketController {
 		User user = userSevice.getUserByToken(token);
 		
 		if(user == null){
-			return getUserNotAvailableError();
+			return Util.getUserNotAvailableError();
 		}
 		
 		ticketSevice.deleteMyTicket(user.getUserid(), ticketid);
 		
-		Map<String, String> result = new LinkedHashMap<>();
-		result.put("result", "deleted");
-		
-		return (T) result; 
+		return Util.getSuccessResult(); 
 	}
 	
 	
@@ -156,15 +132,12 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
-			return getUserNotAvailableError();
+			return Util.getUserNotAvailableError();
 		}
 		
 		ticketSevice.updateTicket(ticketid, content, 2, 1);
 		
-		Map<String, String> result = new LinkedHashMap<>();
-		result.put("result", "updated");
-		
-		return (T) result; 
+		return Util.getSuccessResult(); 
 	}
 	
 	@ResponseBody
@@ -182,10 +155,7 @@ public class TicketController {
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
 		
-		Map<String, String> result = new LinkedHashMap<>();
-		result.put("result", "updated");
-		
-		return (T) result; 
+		return Util.getSuccessResult(); 
 	}
 	
 	@ResponseBody
@@ -203,10 +173,7 @@ public class TicketController {
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
 		
-		Map<String, String> result = new LinkedHashMap<>();
-		result.put("result", "updated");
-		
-		return (T) result; 
+		return Util.getSuccessResult(); 
 	}
 	
 	@ResponseBody
@@ -221,10 +188,7 @@ public class TicketController {
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		ticketSevice.deleteTickets(user, ticketids);
 		
-		Map<String, String> result = new LinkedHashMap<>();
-		result.put("result", "deleted");
-		
-		return (T) result; 
+		return Util.getSuccessResult(); 
 	}
 	
 	@ResponseBody
@@ -239,9 +203,6 @@ public class TicketController {
 		
 		ticketSevice.deleteTickets(user, ticketids);
 		
-		Map<String, String> result = new LinkedHashMap<>();
-		result.put("result", "deleted");
-		
-		return (T) result; 
+		return Util.getSuccessResult(); 
 	}
 }

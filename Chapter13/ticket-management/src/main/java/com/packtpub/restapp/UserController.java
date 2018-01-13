@@ -158,7 +158,10 @@ public class UserController {
 		) {
 		Map<String, Object> map = new LinkedHashMap<>();
 		userSevice.createUser(username, password, 1);
-		map.put("result", "added");
+		
+		map.put("result_code", 0);
+		map.put("result", "success");
+		
 		return map;
 	}
 	
