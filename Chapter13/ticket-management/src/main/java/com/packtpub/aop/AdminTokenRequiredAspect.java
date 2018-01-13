@@ -42,7 +42,9 @@ public class AdminTokenRequiredAspect {
 		
 		String subject = claims.getSubject();
 		
-		if(subject.split("=").length != 2 || new Integer(subject.split("=")[0]) != 3){
+		System.out.println(" usertype : "+subject.split("=")[1]);
+		
+		if(subject.split("=").length != 2 || new Integer(subject.split("=")[1]) != 3){
 			throw new RuntimeException("User is not authorized");
 		}		
 	}

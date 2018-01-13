@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.packtpub.aop.AdminTokenRequired;
 import com.packtpub.aop.CSRTokenRequired;
-import com.packtpub.aop.TokenRequired;
+import com.packtpub.aop.UserTokenRequired;
 import com.packtpub.model.User;
 import com.packtpub.service.TicketService;
 import com.packtpub.service.UserService;
@@ -47,7 +47,7 @@ public class TicketController {
 	}			
 	
 	@ResponseBody
-	@TokenRequired
+	@UserTokenRequired
 	@RequestMapping("/{ticketid}")
 	public <T> T getTicket(
 		@PathVariable("ticketid") final Integer ticketid,		
@@ -65,18 +65,14 @@ public class TicketController {
 	 */
 	@SuppressWarnings("unchecked")
 	@ResponseBody
+	@UserTokenRequired
 	@RequestMapping(value = "", method = RequestMethod.POST)
 	public <T> T addTicket(			
 			@RequestParam(value="content") String content,			
 			HttpServletRequest request
 			) {
 		
-		User user = userSevice.getUserByToken(request.getHeader("token"));
-		
-		if(user == null){
-			return Util.getUserNotAvailableError();
-		}
-		
+		User user = userSevice.getUserByToken(request.getHeader("token"));		
 		ticketSevice.addTicket(user.getUserid(), content, 2, 1);		
 		
 		return Util.getSuccessResult(); 
@@ -88,8 +84,7 @@ public class TicketController {
 			HttpServletRequest request
 			) {
 		
-		String token = request.getHeader("token");		
-		User user = userSevice.getUserByToken(token);
+		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		if(user == null){
 			return Util.getUserNotAvailableError();
@@ -99,19 +94,15 @@ public class TicketController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/", method =  RequestMethod.DELETE)
+	@UserTokenRequired
+	@RequestMapping(value = "/{ticketid}", method =  RequestMethod.DELETE)
 	public <T> T deleteTicketByUser (
-			@RequestParam("ticketid") final Integer ticketid,
+			@PathVariable("ticketid") final Integer ticketid,
 			
 			HttpServletRequest request			
 			) throws Exception {
 		
-		String token = request.getHeader("token");		
-		User user = userSevice.getUserByToken(token);
-		
-		if(user == null){
-			return Util.getUserNotAvailableError();
-		}
+		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
 		ticketSevice.deleteMyTicket(user.getUserid(), ticketid);
 		

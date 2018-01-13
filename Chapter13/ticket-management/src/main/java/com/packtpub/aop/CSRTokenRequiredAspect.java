@@ -42,7 +42,7 @@ public class CSRTokenRequiredAspect {
 		
 		String subject = claims.getSubject();
 		
-		if(subject.split("=").length != 2 || new Integer(subject.split("=")[0]) != 2){
+		if(subject.split("=").length != 2 || new Integer(subject.split("=")[1]) != 2){
 			throw new RuntimeException("User is not authorized");
 		}		
 	}
