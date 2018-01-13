@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.packtpub.aop.AdminTokenRequired;
 import com.packtpub.model.User;
 import com.packtpub.service.TicketService;
 import com.packtpub.service.UserService;
@@ -29,16 +30,11 @@ public class TicketController {
 	UserService userSevice;
 
 	@ResponseBody
-	@RequestMapping({"/by/admin", "/by/csr"})
+	@AdminTokenRequired
+	@RequestMapping("/by/admin")
 	public <T> T getAllTickets(
 		HttpServletRequest request,
 		HttpServletResponse response) {
-		
-		User user = userSevice.getUserByToken(request.getHeader("token"));
-		
-		if(user == null){
-			return getUserNotAvailableError();
-		}
 		
 		return (T) ticketSevice.getAllTickets();
 	}	
@@ -49,7 +45,7 @@ public class TicketController {
 		map.put("result_code", 501);
 		map.put("result", "User Not Available");			
 		return (T) map;
-	}
+	}	
 	
 	@ResponseBody
 	@RequestMapping("/{ticketid}")
@@ -149,13 +145,11 @@ public class TicketController {
 	
 	
 	@ResponseBody
-	@RequestMapping(value = "/", method =  RequestMethod.PUT)
-	public <T> T updateTicketByUser (
-			@RequestParam("ticketid") final Integer ticketid,
+	@RequestMapping(value = "/{ticketid}", method =  RequestMethod.PUT)
+	public <T> T updateTicketByCustomer (
+			@PathVariable("ticketid") final Integer ticketid,
 			
 			@RequestParam(value="content") String content,
-			@RequestParam(value="severity") Integer severity,
-			@RequestParam(value="status") Integer status,
 			
 			HttpServletRequest request,
 			HttpServletResponse response
@@ -167,7 +161,7 @@ public class TicketController {
 			return getUserNotAvailableError();
 		}
 		
-		ticketSevice.updateTicket(ticketid, content, severity, status);
+		ticketSevice.updateTicket(ticketid, content, 2, 1);
 		
 		Map<String, String> result = new LinkedHashMap<>();
 		result.put("result", "updated");
@@ -203,6 +197,7 @@ public class TicketController {
 	}
 	
 	@ResponseBody
+	@AdminTokenRequired
 	@RequestMapping(value = "/by/admin", method =  RequestMethod.PUT)
 	public <T> T updateTicketByAdmin (
 			@RequestParam("ticketid") final Integer ticketid,
@@ -214,12 +209,6 @@ public class TicketController {
 			HttpServletRequest request,
 			HttpServletResponse response
 			) throws Exception {
-		
-		User user = userSevice.getUserByToken(request.getHeader("token"));
-		
-		if(user == null){
-			return getUserNotAvailableError();
-		}
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
 		
@@ -244,7 +233,7 @@ public class TicketController {
 			return getUserNotAvailableError();
 		}
 		
-		ticketSevice.deleteTickets(user.getUserid(), ticketids);
+		ticketSevice.deleteTickets(user, ticketids);
 		
 		Map<String, String> result = new LinkedHashMap<>();
 		result.put("result", "deleted");
@@ -253,6 +242,7 @@ public class TicketController {
 	}
 	
 	@ResponseBody
+	@AdminTokenRequired
 	@RequestMapping(value = "/by/admin", method =  RequestMethod.DELETE)
 	public <T> T deleteTicketsByAdmin (			
 			@RequestParam("ticketids") final String ticketids,
@@ -262,11 +252,7 @@ public class TicketController {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
-		if(user == null){
-			return getUserNotAvailableError();
-		}
-		
-		ticketSevice.deleteTickets(user.getUserid(), ticketids);
+		ticketSevice.deleteTickets(user, ticketids);
 		
 		Map<String, String> result = new LinkedHashMap<>();
 		result.put("result", "deleted");

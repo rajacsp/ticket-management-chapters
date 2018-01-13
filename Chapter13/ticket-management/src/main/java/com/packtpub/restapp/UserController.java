@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.packtpub.aop.TokenRequired;
-import com.packtpub.aop.UserTokenRequired;
 import com.packtpub.model.User;
 import com.packtpub.service.SecurityService;
 import com.packtpub.service.UserService;
