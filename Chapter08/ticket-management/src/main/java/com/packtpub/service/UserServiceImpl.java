@@ -1,5 +1,6 @@
 package com.packtpub.service;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,8 +53,8 @@ public class UserServiceImpl implements UserService {
 
 	public UserServiceImpl() {
 		users = new LinkedList<>();
-		users.add(new User(100, "David"));
-		users.add(new User(101, "Peter"));
-		users.add(new User(102, "John"));
+		users.add(new User(100, "David", new Date()));
+		users.add(new User(101, "Peter", new Date()));
+		users.add(new User(102, "John", new Date()));
 	}
 }
