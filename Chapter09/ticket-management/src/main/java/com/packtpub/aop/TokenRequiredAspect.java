@@ -27,6 +27,8 @@ public class TokenRequiredAspect {
 	@Before("@annotation(tokenRequired)")
 	public void tokenRequiredWithAnnotation(TokenRequired tokenRequired) throws Throwable{
 		
+		System.out.println("Before tokenRequiredWithAnnotation");
+		
 		ServletRequestAttributes reqAttributes = (ServletRequestAttributes)RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest request = reqAttributes.getRequest();
 		
