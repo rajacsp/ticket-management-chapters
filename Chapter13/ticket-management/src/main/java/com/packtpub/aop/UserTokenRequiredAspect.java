@@ -29,7 +29,7 @@ public class UserTokenRequiredAspect {
 		String tokenInHeader = request.getHeader("token");
 		
 		if(StringUtils.isEmpty(tokenInHeader)){
-			throw new RuntimeException("Empty token");
+			throw new IllegalArgumentException("Empty token");
 		}		
 		
 		Claims claims = Jwts.parser()         
@@ -37,13 +37,13 @@ public class UserTokenRequiredAspect {
 			       .parseClaimsJws(tokenInHeader).getBody();
 		
 		if(claims == null || claims.getSubject() == null){
-			throw new RuntimeException("Token Error : Claim is null");
+			throw new IllegalArgumentException("Token Error : Claim is null");
 		}
 		
 		String subject = claims.getSubject();
 		
 		if(subject.split("=").length != 2){
-			throw new RuntimeException("User token is not authorized");
+			throw new IllegalArgumentException("User token is not authorized");
 		}		
 	}
 }
