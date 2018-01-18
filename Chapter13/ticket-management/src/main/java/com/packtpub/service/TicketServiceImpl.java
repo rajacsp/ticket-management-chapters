@@ -86,12 +86,12 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public void deleteTickets(User user, String ticketids) throws Exception {
+	public void deleteTickets(User user, String ticketids) {
 		
 		List<String> ticketObjList = Arrays.asList(ticketids.split(","));
 		
 		if(user.getUsertype() == 2 && ticketObjList.size() > 3){
-			throw new Exception("CSR can't delete more than 3 tickets");
+			throw new RuntimeException("CSR can't delete more than 3 tickets");
 		}
 		
 		List<Integer> intList =
@@ -104,7 +104,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 	
 	@Override
-	public void deleteMyTicket(Integer userid, Integer ticketid) throws Exception {		
+	public void deleteMyTicket(Integer userid, Integer ticketid) {		
 		tickets.removeIf(x -> x.getTicketid().intValue() == ticketid.intValue() && x.getCreatorid().intValue() == userid.intValue());
 	}
 }

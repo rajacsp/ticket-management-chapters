@@ -100,7 +100,7 @@ public class TicketController {
 			@PathVariable("ticketid") final Integer ticketid,
 			
 			HttpServletRequest request			
-			) throws Exception {
+			) {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
@@ -118,7 +118,7 @@ public class TicketController {
 			@RequestParam(value="content") String content,
 			
 			HttpServletRequest request			
-			) throws Exception {
+			) {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		
@@ -142,7 +142,7 @@ public class TicketController {
 			@RequestParam(value="status") Integer status,
 			
 			HttpServletRequest request
-			) throws Exception {
+			) {
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
 		
@@ -160,7 +160,7 @@ public class TicketController {
 			@RequestParam(value="status") Integer status,
 			
 			HttpServletRequest request
-			) throws Exception {
+			) {
 		
 		ticketSevice.updateTicket(ticketid, content, severity, status);
 		
@@ -174,7 +174,7 @@ public class TicketController {
 			@RequestParam("ticketids") final String ticketids,
 			
 			HttpServletRequest request
-			) throws Exception {
+			) {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		ticketSevice.deleteTickets(user, ticketids);
@@ -188,7 +188,7 @@ public class TicketController {
 	public <T> T deleteTicketsByAdmin (			
 			@RequestParam("ticketids") final String ticketids,
 			HttpServletRequest request
-			) throws Exception {
+			) {
 		
 		User user = userSevice.getUserByToken(request.getHeader("token"));
 		

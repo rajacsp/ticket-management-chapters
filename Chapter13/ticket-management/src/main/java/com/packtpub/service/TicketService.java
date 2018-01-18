@@ -11,7 +11,7 @@ public interface TicketService {
 	
 	List<Ticket> getMyTickets(Integer creatorid);
 	
-	void deleteMyTicket(Integer userid, Integer ticketid) throws Exception;
+	void deleteMyTicket(Integer userid, Integer ticketid);
 
 	Ticket getTicket(Integer creatorid, Integer ticketid);
 	
@@ -21,5 +21,5 @@ public interface TicketService {
 	
 	void updateTicket(Integer ticketid, String content, Integer severity, Integer status);
 	
-	void deleteTickets(User user, String ticketids) throws Exception;
+	void deleteTickets(User user, String ticketids);
 }

@@ -34,7 +34,7 @@ public class TokenRequiredAspect {
 		String tokenInHeader = request.getHeader("token");
 		
 		if(StringUtils.isEmpty(tokenInHeader)){
-			throw new Exception("Empty token");
+			throw new IllegalArgumentException("Empty token");
 		}
 		
 		Claims claims = Jwts.parser()         
@@ -42,11 +42,11 @@ public class TokenRequiredAspect {
 			       .parseClaimsJws(tokenInHeader).getBody();
 		
 		if(claims == null || claims.getSubject() == null){
-			throw new Exception("Token Error : Claim is null");
+			throw new IllegalArgumentException("Token Error : Claim is null");
 		}
 		
 		if(!claims.getSubject().equalsIgnoreCase("packt")){
-			throw new Exception("Subject doesn't match in the token");
+			throw new IllegalArgumentException("Subject doesn't match in the token");
 		}
 	}
 }

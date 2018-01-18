@@ -29,7 +29,7 @@ public class AdminTokenRequiredAspect {
 		String tokenInHeader = request.getHeader("token");
 		
 		if(StringUtils.isEmpty(tokenInHeader)){
-			throw new RuntimeException("Empty token");
+			throw new IllegalArgumentException("Empty token");
 		}		
 		
 		Claims claims = Jwts.parser()         
@@ -37,7 +37,7 @@ public class AdminTokenRequiredAspect {
 			       .parseClaimsJws(tokenInHeader).getBody();
 		
 		if(claims == null || claims.getSubject() == null){
-			throw new RuntimeException("Token Error : Claim is null");
+			throw new IllegalArgumentException("Token Error : Claim is null");
 		}
 		
 		String subject = claims.getSubject();
@@ -45,7 +45,7 @@ public class AdminTokenRequiredAspect {
 		System.out.println(" usertype : "+subject.split("=")[1]);
 		
 		if(subject.split("=").length != 2 || new Integer(subject.split("=")[1]) != 3){
-			throw new RuntimeException("User is not authorized");
+			throw new IllegalArgumentException("User is not authorized");
 		}		
 	}
 }
