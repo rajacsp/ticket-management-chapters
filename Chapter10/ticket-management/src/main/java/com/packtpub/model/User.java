@@ -1,7 +1,14 @@
 package com.packtpub.model;
 
-public class User {	
+import java.io.Serializable;
 
+public class User implements Serializable {	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3453281303625368221L;
+	
 	private Integer userid;
 	
 	public Integer getUserid() {
@@ -21,6 +28,10 @@ public class User {
 	}
 
 	private String username;
+	
+	public User(){
+		
+	}
 
 	public User(Integer userid, String username) {
 		this.userid = userid;
