@@ -16,7 +16,8 @@ public class UserHandler {
 	}
 
 	public Mono<ServerResponse> getAllUsers(ServerRequest request) {
-		Flux<User> users = this.userRepository.getAllUsers();
+		Flux<User> users = this.userRepository.getAllUsers();		
+		
 		return ServerResponse.ok().contentType(APPLICATION_JSON).body(users, User.class);
 	}
 }

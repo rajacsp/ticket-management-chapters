@@ -1,6 +1,5 @@
 package com.packtpub.reactive;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import reactor.core.publisher.Flux;
@@ -8,13 +7,18 @@ import reactor.core.publisher.Flux;
 public class UserRepositorySample implements UserRepository {
 
 	// initiate Users
-	private final Map<Integer, User> users = new HashMap<>();
+	private Map<Integer, User> users = null;
 
 	// fill dummy values for testing
 	public UserRepositorySample() {
-		this.users.put(1, new User(100, "David"));
-		this.users.put(2, new User(101, "John"));
-		this.users.put(3, new User(102, "Kevin"));
+		
+		
+		// Java 9 Immutable map used
+		users = Map.of(
+				1, (new User(1, "David")),
+				2, (new User(2, "David")),
+				3, (new User(3, "David"))
+		);		
 	}
 
 	// this method will return all users
