@@ -16,8 +16,8 @@ public class UserRepositorySample implements UserRepository {
 		// Java 9 Immutable map used
 		users = Map.of(
 				1, (new User(1, "David")),
-				2, (new User(2, "David")),
-				3, (new User(3, "David"))
+				2, (new User(2, "John")),
+				3, (new User(3, "Kevin"))
 		);		
 	}
 
