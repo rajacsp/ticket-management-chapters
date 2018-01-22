@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -89,5 +90,16 @@ public class HomeController extends ErrorHandler {
 		map.put("item", item);
 		return map;
 	}
-
+	
+	// other methods
+	@ResponseBody
+	@RequestMapping("/test/error/{id}")
+	public Map<String, Object> testRuntimeError(@PathVariable("id") Integer id){
+		if(id == 1){
+			throw new RuntimeException("some exception");
+		}
+		Map<String, Object> map = new LinkedHashMap<>();
+		map.put("result", "one");
+		return map;
+	}
 }
